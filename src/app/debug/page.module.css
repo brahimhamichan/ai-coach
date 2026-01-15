@@ -1,0 +1,218 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xl);
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.testButton {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-accent-warning);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: black;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.testButton:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.testButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: var(--space-2xl);
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.emptyMessage {
+    font-size: 1.125rem;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.emptyHint {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.section {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sectionTitle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+}
+
+/* Timeline */
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.timelineItem {
+    padding: var(--space-md);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.timelineMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.callType {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-accent-primary);
+}
+
+.status {
+    font-size: 0.75rem;
+    padding: 2px 8px;
+    border-radius: 9999px;
+}
+
+.statusScheduled {
+    background: rgba(92, 143, 255, 0.15);
+    color: var(--color-accent-secondary);
+}
+
+.statusInProgress {
+    background: rgba(251, 191, 36, 0.15);
+    color: var(--color-accent-warning);
+}
+
+.statusCompleted {
+    background: rgba(74, 222, 128, 0.15);
+    color: var(--color-accent-success);
+}
+
+.statusMissed,
+.statusFailed {
+    background: rgba(248, 113, 113, 0.15);
+    color: var(--color-accent-danger);
+}
+
+.timelineDetails {
+    display: flex;
+    gap: var(--space-md);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.vapiId {
+    font-family: var(--font-mono);
+}
+
+/* Summaries */
+.summariesList {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.summaryItem {
+    padding: var(--space-md);
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-md);
+}
+
+.summaryMeta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.timestamp {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.locked {
+    font-size: 0.75rem;
+}
+
+.summaryPreview {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+}
+
+/* JSON Display */
+.json {
+    background: var(--color-bg-secondary);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    overflow-x: auto;
+    white-space: pre-wrap;
+}
+
+.skeleton {
+    height: 300px;
+    background: linear-gradient(90deg, var(--color-bg-secondary) 0%, var(--color-bg-hover) 50%, var(--color-bg-secondary) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-lg);
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

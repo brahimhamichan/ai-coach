@@ -1,0 +1,215 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: var(--space-xl);
+}
+
+.meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.type {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-accent-primary);
+}
+
+.date {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+}
+
+.backLink {
+    background: none;
+    border: none;
+    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    cursor: pointer;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.backLink:hover {
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.content {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.summaryText {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-primary);
+    white-space: pre-wrap;
+}
+
+.editButton {
+    margin-top: var(--space-lg);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.editButton:hover {
+    background: var(--color-bg-hover);
+    color: var(--color-text-primary);
+}
+
+.lockedNote {
+    margin-top: var(--space-lg);
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+}
+
+.editor {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.textarea {
+    width: 100%;
+    min-height: 300px;
+    padding: var(--space-md);
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    line-height: 1.6;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+}
+
+.editorActions {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: flex-end;
+}
+
+.cancelButton,
+.saveButton,
+.lockButton {
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.cancelButton {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-secondary);
+}
+
+.cancelButton:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.saveButton {
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-primary);
+}
+
+.saveButton:hover {
+    background: var(--color-bg-hover);
+}
+
+.lockButton {
+    background: var(--gradient-primary);
+    border: none;
+    color: white;
+}
+
+.lockButton:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+/* Empty State */
+.emptyState {
+    text-align: center;
+    padding: var(--space-2xl);
+}
+
+.emptyMessage {
+    font-size: 1.125rem;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.emptyHint {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+}
+
+.backButton {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-sm);
+    color: white;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.backButton:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.skeleton {
+    height: 300px;
+    background: linear-gradient(90deg, var(--color-bg-secondary) 0%, var(--color-bg-hover) 50%, var(--color-bg-secondary) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-lg);
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

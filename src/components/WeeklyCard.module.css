@@ -1,0 +1,127 @@
+.card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+.weekDate {
+    font-size: 0.75rem;
+    color: var(--color-accent-secondary);
+}
+
+.content {
+    padding: var(--space-lg);
+}
+
+.objective {
+    margin-bottom: var(--space-lg);
+}
+
+.objectiveText {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+}
+
+.section {
+    margin-bottom: var(--space-lg);
+}
+
+.section:last-child {
+    margin-bottom: 0;
+}
+
+.sectionTitle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.actionList {
+    list-style: none;
+    padding: 0;
+}
+
+.actionItem {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+}
+
+.actionNumber {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+}
+
+.bottleneckList {
+    list-style: none;
+    padding: 0;
+}
+
+.bottleneckList li {
+    position: relative;
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-xs);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+}
+
+.bottleneckList li::before {
+    content: "⚠";
+    position: absolute;
+    left: 0;
+    font-size: 0.75rem;
+    color: var(--color-accent-warning);
+}
+
+.skeleton {
+    height: 120px;
+    background: linear-gradient(90deg, var(--color-bg-secondary) 0%, var(--color-bg-hover) 50%, var(--color-bg-secondary) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    margin: var(--space-md);
+    border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

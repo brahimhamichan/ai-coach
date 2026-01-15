@@ -1,0 +1,130 @@
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-lg);
+    width: 100%;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-xl);
+}
+
+.title {
+    font-size: 1.75rem;
+    font-weight: 700;
+}
+
+.saveMessage {
+    font-size: 0.875rem;
+    color: var(--color-accent-success);
+}
+
+.sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+}
+
+.section {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.sectionTitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-lg);
+}
+
+.hint {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    font-style: italic;
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    background: rgba(124, 92, 255, 0.1);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--color-accent-primary);
+}
+
+.field {
+    margin-bottom: var(--space-md);
+}
+
+.field:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+}
+
+.select,
+.input {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--color-bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: border-color var(--transition-fast);
+}
+
+.select:focus,
+.input:focus {
+    outline: none;
+    border-color: var(--color-accent-primary);
+}
+
+.checkboxLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+}
+
+.checkboxLabel input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-accent-primary);
+}
+
+.skeleton {
+    height: 400px;
+    background: linear-gradient(90deg, var(--color-bg-secondary) 0%, var(--color-bg-hover) 50%, var(--color-bg-secondary) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-lg);
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}

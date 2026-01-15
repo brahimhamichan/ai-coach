@@ -1,0 +1,118 @@
+.card {
+    background: var(--color-bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.card:hover {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.collapsed {
+    opacity: 0.8;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md) var(--space-lg);
+    cursor: pointer;
+    user-select: none;
+}
+
+.header:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+}
+
+.expandIcon {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+}
+
+.content {
+    padding: 0 var(--space-lg) var(--space-lg);
+}
+
+.visionText {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-lg);
+}
+
+.section {
+    margin-bottom: var(--space-lg);
+}
+
+.sectionTitle {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+}
+
+.list li {
+    position: relative;
+    padding-left: var(--space-md);
+    margin-bottom: var(--space-xs);
+    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+}
+
+.list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--color-accent-primary);
+}
+
+.commitment {
+    background: rgba(124, 92, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    border-left: 3px solid var(--color-accent-primary);
+}
+
+.quote {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+}
+
+.skeleton {
+    height: 60px;
+    background: linear-gradient(90deg, var(--color-bg-secondary) 0%, var(--color-bg-hover) 50%, var(--color-bg-secondary) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    margin: var(--space-md);
+    border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
