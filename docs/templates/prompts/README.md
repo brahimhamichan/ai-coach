@@ -4,11 +4,11 @@ This directory contains the AI assistant prompts for each call type. These promp
 
 ## Call Types
 
-| File | Purpose | Frequency |
-|------|---------|-----------|
-| `onboarding.md` | First call: Build vision and commitments | Once per user |
-| `weekly.md` | Sunday planning call | Weekly |
-| `evening.md` | Daily evening recap | Mon-Fri (configurable) |
+| File            | Purpose                                  | Frequency              |
+| --------------- | ---------------------------------------- | ---------------------- |
+| `onboarding.md` | First call: Build vision and commitments | Once per user          |
+| `weekly.md`     | Sunday planning call                     | Weekly                 |
+| `daily.md`      | Daily evening recap                      | Mon-Fri (configurable) |
 
 ## Setup Instructions
 
@@ -25,14 +25,14 @@ When calls complete, Vapi sends this payload to your webhook:
 ```json
 {
   "user_id": "uuid-or-phone-mapped",
-  "call_type": "onboarding|weekly|evening",
+  "call_type": "onboarding|weekly|daily",
   "call_session_id": "uuid",
   "timestamp": "ISO-8601",
   "summary_text": "...",
   "extracted": {
     "vision": {},     // For onboarding calls
     "weekly": {},     // For weekly calls  
-    "daily": {}       // For evening calls
+    "daily": {}       // For daily calls
   }
 }
 ```

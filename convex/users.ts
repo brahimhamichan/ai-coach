@@ -1,80 +1,115 @@
 import { query, mutation, internalQuery } from "./_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
-// Hardcoded user ID for MVP - no auth required
-// This will be created on first app load if it doesn't exist
-export const STUB_USER_ID = "stub_user_001";
-
-// Get the stub user (or null if not created yet)
-export const getStubUser = query({
+export const viewer = query({
     args: {},
     handler: async (ctx) => {
-        const users = await ctx.db.query("users").collect();
-        return users[0] ?? null;
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            return null;
+        }
+        const user = await ctx.db.get(userId);
+        return user;
     },
 });
 
-// Internal query for webhook handler
-export const getStubUserInternal = internalQuery({
-    args: {},
-    handler: async (ctx) => {
-        const users = await ctx.db.query("users").collect();
-        return users[0] ?? null;
-    },
-});
-
-// Create the stub user for MVP
-export const createStubUser = mutation({
+export const initializeUser = mutation({
     args: {
-        phone: v.string(),
-        timezone: v.string(),
+        timezone: v.optional(v.string()),
+        name: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        // Check if user already exists
-        const existing = await ctx.db.query("users").collect();
-        if (existing.length > 0) {
-            return existing[0]._id;
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            console.log("initializeUser called without authentication");
+            return;
         }
 
-        // Create new stub user
-        const userId = await ctx.db.insert("users", {
-            phone: args.phone,
-            timezone: args.timezone,
-            coachingTone: "supportive",
-            smsEnabled: false,
-            pushEnabled: false,
-        });
+        const user = await ctx.db.get(userId);
+        if (!user) {
+            console.log("initializeUser user not found yet");
+            return;
+        }
 
-        // Create default schedule for the user
-        await ctx.db.insert("schedules", {
-            userId,
-            weeklyDay: "Sunday",
-            weeklyTime: "10:00",
-            eveningDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-            eveningTime: "17:00",
-            includeSaturday: false,
-            includeSundayRecap: false,
-            retryIntervalMinutes: 30,
-        });
+        // Check if schedule exists
+        const schedule = await ctx.db
+            .query("schedules")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .first();
 
-        return userId;
+        if (!schedule) {
+            // Create default schedule
+            await ctx.db.insert("schedules", {
+                userId,
+                weeklyDay: "Sunday",
+                weeklyTime: "10:00",
+                eveningDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                eveningTime: "17:00",
+                includeSaturday: false,
+                includeSundayRecap: false,
+                retryIntervalMinutes: 30,
+            });
+        }
+
+        // Initialize defaults if missing or provided
+        const updates: any = {};
+        if (args.timezone && !user.timezone) {
+            updates.timezone = args.timezone;
+        } else if (!user.timezone) {
+            updates.timezone = "America/Los_Angeles";
+        }
+
+        if (args.name && !user.name) {
+            updates.name = args.name;
+        }
+
+        if (!user.coachingTone) {
+            updates.coachingTone = "supportive";
+            updates.smsEnabled = false;
+            updates.pushEnabled = false;
+        }
+
+        if (Object.keys(updates).length > 0) {
+            await ctx.db.patch(userId, updates);
+        }
     },
 });
 
-// Update user settings
+// Internal query for webhook lookup
+export const getUserByPhone = internalQuery({
+    args: { phone: v.string() },
+    handler: async (ctx, args) => {
+        // Since phone is now optional and not unique indexed by default in auth schema (we added index though),
+        // we find the first match.
+        const user = await ctx.db
+            .query("users")
+            .withIndex("by_phone", (q) => q.eq("phone", args.phone))
+            .first();
+        return user;
+    },
+});
+
 export const updateUser = mutation({
     args: {
-        userId: v.id("users"),
         timezone: v.optional(v.string()),
+        phone: v.optional(v.string()),
+        whatsappPhone: v.optional(v.string()),
         coachingTone: v.optional(v.string()),
         smsEnabled: v.optional(v.boolean()),
         pushEnabled: v.optional(v.boolean()),
+        name: v.optional(v.string()),
     },
     handler: async (ctx, args) => {
-        const { userId, ...updates } = args;
-        const filteredUpdates = Object.fromEntries(
-            Object.entries(updates).filter(([, value]) => value !== undefined)
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            console.log("updateUser called without authentication");
+            return;
+        }
+
+        const updates = Object.fromEntries(
+            Object.entries(args).filter(([, value]) => value !== undefined)
         );
-        await ctx.db.patch(userId, filteredUpdates);
+        await ctx.db.patch(userId, updates);
     },
 });

@@ -1,10 +1,14 @@
 import { query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Get weekly objective for current week
 export const getCurrentWeekObjective = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return null;
+
         // Get current week start date (Sunday)
         const now = new Date();
         const dayOfWeek = now.getDay();
@@ -16,7 +20,7 @@ export const getCurrentWeekObjective = query({
         const objective = await ctx.db
             .query("weeklyObjectives")
             .withIndex("by_user_week", (q) =>
-                q.eq("userId", args.userId).eq("weekStartDate", weekStartDate)
+                q.eq("userId", userId).eq("weekStartDate", weekStartDate)
             )
             .first();
 
@@ -26,11 +30,14 @@ export const getCurrentWeekObjective = query({
 
 // Get weekly objectives history
 export const getWeeklyObjectivesHistory = query({
-    args: { userId: v.id("users"), limit: v.optional(v.number()) },
+    args: { limit: v.optional(v.number()) },
     handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return [];
+
         const objectives = await ctx.db
             .query("weeklyObjectives")
-            .withIndex("by_user_week", (q) => q.eq("userId", args.userId))
+            .withIndex("by_user_week", (q) => q.eq("userId", userId))
             .order("desc")
             .take(args.limit ?? 10);
 

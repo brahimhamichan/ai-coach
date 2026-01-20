@@ -3,6 +3,7 @@
 import { Doc } from "../../convex/_generated/dataModel";
 import { EmptyState } from "./EmptyState";
 import styles from "./VisionCard.module.css";
+import { useState } from "react";
 
 interface VisionCardProps {
     vision: Doc<"visionProfiles"> | null | undefined;
@@ -86,4 +87,4 @@ export function VisionCard({ vision, isLoading }: VisionCardProps) {
     );
 }
 
-import { useState } from "react";
+

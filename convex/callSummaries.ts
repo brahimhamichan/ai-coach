@@ -1,11 +1,19 @@
 import { query, mutation, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Get call summary by ID
 export const getCallSummary = query({
     args: { summaryId: v.id("callSummaries") },
     handler: async (ctx, args) => {
-        return await ctx.db.get(args.summaryId);
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return null;
+
+        const summary = await ctx.db.get(args.summaryId);
+        if (!summary || summary.userId !== userId) {
+            return null; // Not found or unauthorized
+        }
+        return summary;
     },
 });
 
@@ -13,10 +21,17 @@ export const getCallSummary = query({
 export const getCallSummaryBySession = query({
     args: { sessionId: v.id("callSessions") },
     handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return null;
+
         const summary = await ctx.db
             .query("callSummaries")
             .withIndex("by_session", (q) => q.eq("callSessionId", args.sessionId))
             .first();
+
+        if (summary && summary.userId !== userId) {
+            return null;
+        }
 
         return summary;
     },
@@ -24,11 +39,14 @@ export const getCallSummaryBySession = query({
 
 // Get latest call summary for a user
 export const getLatestCallSummary = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return null;
+
         const summary = await ctx.db
             .query("callSummaries")
-            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .withIndex("by_user", (q) => q.eq("userId", userId))
             .order("desc")
             .first();
 
@@ -38,11 +56,14 @@ export const getLatestCallSummary = query({
 
 // Get all call summaries for a user
 export const getCallSummaries = query({
-    args: { userId: v.id("users"), limit: v.optional(v.number()) },
+    args: { limit: v.optional(v.number()) },
     handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return [];
+
         const summaries = await ctx.db
             .query("callSummaries")
-            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .withIndex("by_user", (q) => q.eq("userId", userId))
             .order("desc")
             .take(args.limit ?? 20);
 
@@ -56,9 +77,9 @@ export const createCallSummary = internalMutation({
         userId: v.id("users"),
         callSessionId: v.id("callSessions"),
         callType: v.union(
-            v.literal("onboarding"),
-            v.literal("weekly"),
-            v.literal("evening")
+            v.literal("onboarding-agent"),
+            v.literal("weekly-agent"),
+            v.literal("daily-agent")
         ),
         timestamp: v.string(),
         summaryText: v.string(),
@@ -87,9 +108,16 @@ export const updateCallSummary = mutation({
         lock: v.optional(v.boolean()),
     },
     handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Unauthenticated");
+
         const summary = await ctx.db.get(args.summaryId);
         if (!summary) {
             throw new Error("Summary not found");
+        }
+
+        if (summary.userId !== userId) {
+            throw new Error("Unauthorized");
         }
 
         if (summary.locked) {
@@ -106,20 +134,22 @@ export const updateCallSummary = mutation({
 // Debug: Create a test call summary
 export const createTestCallSummary = mutation({
     args: {
-        userId: v.id("users"),
         callSessionId: v.id("callSessions"),
         callType: v.union(
-            v.literal("onboarding"),
-            v.literal("weekly"),
-            v.literal("evening")
+            v.literal("onboarding-agent"),
+            v.literal("weekly-agent"),
+            v.literal("daily-agent")
         ),
         summaryText: v.string(),
     },
     handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Unauthenticated");
+
         const now = new Date().toISOString();
 
         const summaryId = await ctx.db.insert("callSummaries", {
-            userId: args.userId,
+            userId: userId,
             callSessionId: args.callSessionId,
             callType: args.callType,
             timestamp: now,

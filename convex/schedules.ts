@@ -1,13 +1,19 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Get schedule for a user
 export const getSchedule = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            return null;
+        }
+
         const schedule = await ctx.db
             .query("schedules")
-            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .withIndex("by_user", (q) => q.eq("userId", userId))
             .first();
         return schedule;
     },
@@ -16,7 +22,6 @@ export const getSchedule = query({
 // Update schedule settings
 export const updateSchedule = mutation({
     args: {
-        userId: v.id("users"),
         onboardingTime: v.optional(v.string()),
         weeklyDay: v.optional(v.string()),
         weeklyTime: v.optional(v.string()),
@@ -27,7 +32,10 @@ export const updateSchedule = mutation({
         retryIntervalMinutes: v.optional(v.number()),
     },
     handler: async (ctx, args) => {
-        const { userId, ...updates } = args;
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            throw new Error("Not authenticated");
+        }
 
         const schedule = await ctx.db
             .query("schedules")
@@ -39,7 +47,7 @@ export const updateSchedule = mutation({
         }
 
         const filteredUpdates = Object.fromEntries(
-            Object.entries(updates).filter(([, value]) => value !== undefined)
+            Object.entries(args).filter(([, value]) => value !== undefined)
         );
 
         await ctx.db.patch(schedule._id, filteredUpdates);

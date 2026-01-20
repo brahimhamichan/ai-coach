@@ -1,13 +1,17 @@
 import { query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Get vision profile for a user
 export const getVisionProfile = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return null;
+
         const vision = await ctx.db
             .query("visionProfiles")
-            .withIndex("by_user", (q) => q.eq("userId", args.userId))
+            .withIndex("by_user", (q) => q.eq("userId", userId))
             .first();
         return vision;
     },
@@ -53,6 +57,3 @@ export const createVisionProfile = internalMutation({
         });
     },
 });
-
-// Note: Vision profiles are ONLY created via Vapi webhook after onboarding call
-// No manual creation mutation - this is a call-owned artifact

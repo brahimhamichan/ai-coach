@@ -1,60 +1,54 @@
 .banner {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: var(--space-md) var(--space-lg);
-    background: linear-gradient(135deg, rgba(124, 92, 255, 0.15) 0%, rgba(92, 143, 255, 0.15) 100%);
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(124, 92, 255, 0.2);
+    align-items: center;
+    background-color: hsl(var(--secondary));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
     text-decoration: none;
-    transition: all var(--transition-fast);
-    margin-bottom: var(--space-lg);
+    transition: background-color 0.2s;
 }
 
 .banner:hover {
-    background: linear-gradient(135deg, rgba(124, 92, 255, 0.2) 0%, rgba(92, 143, 255, 0.2) 100%);
-    border-color: rgba(124, 92, 255, 0.4);
-    transform: translateY(-1px);
+    background-color: hsl(var(--accent));
 }
 
 .content {
     flex: 1;
-    min-width: 0;
 }
 
 .meta {
     display: flex;
+    gap: 1rem;
     align-items: center;
-    gap: var(--space-sm);
-    margin-bottom: var(--space-xs);
+    margin-bottom: 0.25rem;
 }
 
 .type {
-    font-size: 0.75rem;
     font-weight: 600;
-    color: var(--color-accent-primary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    color: hsl(var(--primary));
+    padding: 0.125rem 0.5rem;
+    background-color: hsl(var(--background));
+    border-radius: 9999px;
+    font-size: 0.75rem;
 }
 
 .time {
-    font-size: 0.75rem;
-    color: var(--color-text-muted);
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
 }
 
 .preview {
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-    line-height: 1.4;
     margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    color: hsl(var(--muted-foreground));
+    font-size: 0.9375rem;
 }
 
 .arrow {
+    margin-left: 1.5rem;
+    color: hsl(var(--primary));
     font-size: 1.25rem;
-    color: var(--color-accent-primary);
-    margin-left: var(--space-md);
-    flex-shrink: 0;
+    font-weight: bold;
 }

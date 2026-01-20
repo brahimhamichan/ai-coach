@@ -1,39 +1,37 @@
 .nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: var(--space-md) var(--space-lg);
-    background: var(--color-bg-secondary);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem 2rem;
+    background-color: hsl(var(--card));
+    color: hsl(var(--foreground));
+    border-bottom: 1px solid hsl(var(--border));
 }
 
 .brand {
+    font-size: 1.25rem;
     font-weight: 700;
-    font-size: 1.125rem;
-    color: var(--color-text-primary);
+    color: hsl(var(--foreground));
     text-decoration: none;
+    margin-right: 3rem;
 }
 
 .links {
     display: flex;
-    gap: var(--space-sm);
+    gap: 1.5rem;
+    align-items: center;
 }
 
 .link {
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-    padding: var(--space-xs) var(--space-md);
-    border-radius: var(--radius-sm);
+    color: hsl(var(--muted-foreground));
     text-decoration: none;
-    transition: all var(--transition-fast);
+    font-weight: 500;
+    transition: color 0.2s;
 }
 
 .link:hover {
-    color: var(--color-text-primary);
-    background: rgba(255, 255, 255, 0.05);
+    color: hsl(var(--foreground));
 }
 
 .link.active {
-    color: var(--color-text-primary);
-    background: rgba(124, 92, 255, 0.15);
+    color: hsl(var(--foreground));
 }

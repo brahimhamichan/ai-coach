@@ -1,16 +1,20 @@
 import { query, internalMutation } from "./_generated/server";
 import { v } from "convex/values";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 // Get today's daily plan
 export const getTodayPlan = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return null;
+
         const today = new Date().toISOString().split("T")[0];
 
         const plan = await ctx.db
             .query("dailyPlans")
             .withIndex("by_user_date", (q) =>
-                q.eq("userId", args.userId).eq("date", today)
+                q.eq("userId", userId).eq("date", today)
             )
             .first();
 
@@ -20,8 +24,11 @@ export const getTodayPlan = query({
 
 // Get tomorrow's daily plan
 export const getTomorrowPlan = query({
-    args: { userId: v.id("users") },
-    handler: async (ctx, args) => {
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return null;
+
         const tomorrow = new Date();
         tomorrow.setDate(tomorrow.getDate() + 1);
         const tomorrowDate = tomorrow.toISOString().split("T")[0];
@@ -29,7 +36,7 @@ export const getTomorrowPlan = query({
         const plan = await ctx.db
             .query("dailyPlans")
             .withIndex("by_user_date", (q) =>
-                q.eq("userId", args.userId).eq("date", tomorrowDate)
+                q.eq("userId", userId).eq("date", tomorrowDate)
             )
             .first();
 
@@ -40,14 +47,16 @@ export const getTomorrowPlan = query({
 // Get daily plans for a date range
 export const getDailyPlansRange = query({
     args: {
-        userId: v.id("users"),
         startDate: v.string(),
         endDate: v.string(),
     },
     handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) return [];
+
         const plans = await ctx.db
             .query("dailyPlans")
-            .withIndex("by_user_date", (q) => q.eq("userId", args.userId))
+            .withIndex("by_user_date", (q) => q.eq("userId", userId))
             .filter((q) =>
                 q.and(
                     q.gte(q.field("date"), args.startDate),

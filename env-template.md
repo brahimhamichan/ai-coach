@@ -14,8 +14,15 @@ NEXT_PUBLIC_CONVEX_URL=https://your-deployment.convex.cloud
 # Get from https://dashboard.vapi.ai/api-keys
 VAPI_API_KEY=your_vapi_api_key
 
-# Webhook secret for verifying Vapi payloads (set in Vapi dashboard)
-VAPI_WEBHOOK_SECRET=your_webhook_secret
+# Get from https://dashboard.vapi.ai/assistants
+VAPI_ASSISTANT_ID_ONBOARDING=your_onboarding_assistant_id
+VAPI_ASSISTANT_ID_WEEKLY=your_weekly_assistant_id
+VAPI_ASSISTANT_ID_DAILY=your_daily_assistant_id
+
+# Get from https://dashboard.vapi.ai/phone-numbers
+VAPI_PHONE_NUMBER_ID=your_phone_number_id
+
+
 ```
 
 ## Plivo (SMS - Future Implementation)
@@ -25,6 +32,8 @@ PLIVO_AUTH_ID=your_plivo_auth_id
 PLIVO_AUTH_TOKEN=your_plivo_auth_token
 PLIVO_SENDER_NUMBER=+1234567890
 ```
+
+
 
 ---
 

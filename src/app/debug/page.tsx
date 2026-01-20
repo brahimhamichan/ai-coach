@@ -6,23 +6,18 @@ export const dynamic = "force-dynamic";
 import { useQuery, useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
-import { Navigation } from "@/components/Navigation";
 import styles from "./page.module.css";
+import { useAlert } from "@/components/AlertContext";
 
 export default function DebugPage() {
-    const user = useQuery(api.users.getStubUser);
-    const callSessions = useQuery(
-        api.callSessions.getCallSessions,
-        user ? { userId: user._id } : "skip"
-    );
-    const callSummaries = useQuery(
-        api.callSummaries.getCallSummaries,
-        user ? { userId: user._id } : "skip"
-    );
+    const user = useQuery(api.users.viewer);
+    const callSessions = useQuery(api.callSessions.getCallSessions);
+    const callSummaries = useQuery(api.callSummaries.getCallSummaries, {});
 
     const createTestSession = useMutation(api.callSessions.createTestCallSession);
     const createTestSummary = useMutation(api.callSummaries.createTestCallSummary);
 
+    const { showAlert } = useAlert();
     const [isCreating, setIsCreating] = useState(false);
 
     const handleTriggerTestWebhook = async () => {
@@ -32,22 +27,20 @@ export default function DebugPage() {
         try {
             // Create a test session
             const sessionId = await createTestSession({
-                userId: user._id,
-                callType: "evening",
+                callType: "daily-agent",
             });
 
             // Create a test summary for that session
             await createTestSummary({
-                userId: user._id,
                 callSessionId: sessionId,
-                callType: "evening",
+                callType: "daily-agent",
                 summaryText: "This is a test summary created from the debug page. In a real call, this would contain the full transcript and extracted action items.",
             });
 
-            alert("Test data created!");
+            showAlert("Test data created!", "Success");
         } catch (error) {
             console.error("Failed to create test data:", error);
-            alert("Failed to create test data");
+            showAlert("Failed to create test data", "Error");
         }
 
         setIsCreating(false);
@@ -66,7 +59,7 @@ export default function DebugPage() {
 
     return (
         <div className={styles.page}>
-            <Navigation />
+
 
             <main className={styles.main}>
                 <header className={styles.header}>

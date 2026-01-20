@@ -81,10 +81,10 @@ export default function SummaryPage() {
         setIsSaving(false);
     };
 
-    const callTypeLabels = {
-        onboarding: "Onboarding Call",
-        weekly: "Weekly Planning",
-        evening: "Evening Recap",
+    const callTypeLabels: Record<string, string> = {
+        "onboarding-agent": "Onboarding Call",
+        "weekly-agent": "Weekly Planning",
+        "daily-agent": "Daily Recap",
     };
 
     return (
@@ -94,7 +94,7 @@ export default function SummaryPage() {
             <main className={styles.main}>
                 <header className={styles.header}>
                     <div className={styles.meta}>
-                        <span className={styles.type}>{callTypeLabels[summary.callType]}</span>
+                        <span className={styles.type}>{callTypeLabels[summary.callType] || summary.callType}</span>
                         <span className={styles.date}>
                             {new Date(summary.timestamp).toLocaleDateString("en-US", {
                                 weekday: "long",

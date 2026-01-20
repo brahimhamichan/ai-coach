@@ -1,118 +1,104 @@
 .card {
-    background: var(--color-bg-card);
-    border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    overflow: hidden;
-    transition: all var(--transition-normal);
+    background-color: hsl(var(--card));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
 }
 
-.card:hover {
-    border-color: rgba(255, 255, 255, 0.1);
+.card.collapsed {
+    cursor: pointer;
 }
 
-.collapsed {
-    opacity: 0.8;
+.card.collapsed:hover {
+    background-color: hsl(var(--accent));
 }
 
 .header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: var(--space-md) var(--space-lg);
-    cursor: pointer;
-    user-select: none;
-}
-
-.header:hover {
-    background: rgba(255, 255, 255, 0.02);
+    align-items: center;
 }
 
 .label {
-    font-size: 0.75rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-muted);
-}
-
-.expandIcon {
-    font-size: 1rem;
-    color: var(--color-text-muted);
-}
-
-.content {
-    padding: 0 var(--space-lg) var(--space-lg);
-}
-
-.visionText {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--color-text-primary);
-    margin-bottom: var(--space-lg);
-}
-
-.section {
-    margin-bottom: var(--space-lg);
-}
-
-.sectionTitle {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-muted);
-    margin-bottom: var(--space-sm);
-}
-
-.list {
-    list-style: none;
-    padding: 0;
-}
-
-.list li {
-    position: relative;
-    padding-left: var(--space-md);
-    margin-bottom: var(--space-xs);
-    color: var(--color-text-secondary);
-    font-size: 0.875rem;
-}
-
-.list li::before {
-    content: "→";
-    position: absolute;
-    left: 0;
-    color: var(--color-accent-primary);
-}
-
-.commitment {
-    background: rgba(124, 92, 255, 0.1);
-    border-radius: var(--radius-md);
-    padding: var(--space-md);
-    border-left: 3px solid var(--color-accent-primary);
-}
-
-.quote {
-    font-size: 0.9rem;
-    font-style: italic;
-    color: var(--color-text-primary);
-    line-height: 1.5;
+    color: hsl(var(--foreground));
 }
 
 .skeleton {
-    height: 60px;
-    background: linear-gradient(90deg, var(--color-bg-secondary) 0%, var(--color-bg-hover) 50%, var(--color-bg-secondary) 100%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    margin: var(--space-md);
-    border-radius: var(--radius-sm);
+    height: 100px;
+    background-color: hsl(var(--muted));
+    border-radius: 0.5rem;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    margin-top: 1rem;
 }
 
-@keyframes shimmer {
-    0% {
-        background-position: 200% 0;
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
     }
 
-    100% {
-        background-position: -200% 0;
+    50% {
+        opacity: .5;
     }
+}
+
+.expandIcon {
+    font-size: 1.5rem;
+    color: hsl(var(--muted-foreground));
+    line-height: 1;
+}
+
+.content {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid hsl(var(--border));
+}
+
+.visionText {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: hsl(var(--foreground));
+    margin-bottom: 1.5rem;
+}
+
+.section {
+    margin-top: 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: hsl(var(--muted-foreground));
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+}
+
+.list {
+    padding-left: 1.25rem;
+    margin: 0;
+    color: hsl(var(--muted-foreground));
+}
+
+.list li {
+    margin-bottom: 0.5rem;
+}
+
+.commitment {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: hsl(var(--secondary));
+    border-radius: 0.5rem;
+    border-left: 4px solid hsl(var(--primary));
+}
+
+.quote {
+    font-style: italic;
+    font-weight: 500;
+    color: hsl(var(--primary));
+    margin: 0;
 }

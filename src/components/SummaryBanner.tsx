@@ -14,17 +14,17 @@ export function SummaryBanner({ summary }: SummaryBannerProps) {
         return null;
     }
 
-    const callTypeLabels = {
-        onboarding: "Onboarding Call",
-        weekly: "Weekly Planning",
-        evening: "Evening Recap",
+    const callTypeLabels: Record<string, string> = {
+        "onboarding-agent": "Onboarding Call",
+        "weekly-agent": "Weekly Planning",
+        "daily-agent": "Daily Recap",
     };
 
     return (
         <Link href={`/summary/${summary._id}`} className={styles.banner}>
             <div className={styles.content}>
                 <div className={styles.meta}>
-                    <span className={styles.type}>{callTypeLabels[summary.callType]}</span>
+                    <span className={styles.type}>{callTypeLabels[summary.callType] || summary.callType}</span>
                     <span className={styles.time}>{formatTime(summary.timestamp)}</span>
                 </div>
                 <p className={styles.preview}>
