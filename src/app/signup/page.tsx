@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-    const { signIn } = useAuthActions();
+    const { signIn, signOut } = useAuthActions();
     const router = useRouter();
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
@@ -24,7 +24,8 @@ export default function SignupPage() {
         setError(null);
         try {
             await signIn("password", { email, password, name, flow: "signUp" });
-            router.push("/");
+            await signOut();
+            router.push("/login");
             router.refresh();
         } catch (error: any) {
             console.log(error);

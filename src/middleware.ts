@@ -5,13 +5,18 @@ import {
 } from "@convex-dev/auth/nextjs/server";
 
 const isSignInPage = createRouteMatcher(["/login", "/signup"]);
-const isPublicPage = createRouteMatcher(["/login", "/signup", "/api/vapi/webhook", "/api/elevenlabs/tool"]);
+const isPublicPage = createRouteMatcher(["/", "/login", "/signup", "/api/vapi/webhook", "/api/elevenlabs/tool"]);
 
 export default convexAuthNextjsMiddleware(async (request, { convexAuth }) => {
-    if (isSignInPage(request) && (await convexAuth.isAuthenticated())) {
-        return nextjsMiddlewareRedirect(request, "/");
+    const isAuth = await convexAuth.isAuthenticated();
+
+    // If logged in and on landing page or auth page -> go to dashboard
+    if ((isSignInPage(request) || request.nextUrl.pathname === "/") && isAuth) {
+        return nextjsMiddlewareRedirect(request, "/dashboard");
     }
-    if (!isPublicPage(request) && !(await convexAuth.isAuthenticated())) {
+
+    // If not logged in and not public -> go to login
+    if (!isPublicPage(request) && !isAuth) {
         return nextjsMiddlewareRedirect(request, "/login");
     }
 });
