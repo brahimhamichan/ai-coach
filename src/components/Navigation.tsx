@@ -55,7 +55,7 @@ export function Navigation() {
     };
 
     // Hide navigation on login/signup pages or when user is not logged in
-    const isAuthPage = pathname === "/login" || pathname === "/signup";
+    const isAuthPage = pathname === "/login" || pathname === "/signup" || pathname === "/dash-2";
 
     // Still loading user data
     if (user === undefined) {

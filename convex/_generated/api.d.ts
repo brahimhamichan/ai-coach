@@ -15,6 +15,7 @@ import type * as callSummaries from "../callSummaries.js";
 import type * as calls from "../calls.js";
 import type * as commitmentLogs from "../commitmentLogs.js";
 import type * as dailyPlans from "../dailyPlans.js";
+import type * as dashboard from "../dashboard.js";
 import type * as debug from "../debug.js";
 import type * as http from "../http.js";
 import type * as schedules from "../schedules.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   calls: typeof calls;
   commitmentLogs: typeof commitmentLogs;
   dailyPlans: typeof dailyPlans;
+  dashboard: typeof dashboard;
   debug: typeof debug;
   http: typeof http;
   schedules: typeof schedules;

@@ -11,6 +11,18 @@ const config: Config = {
     theme: {
         extend: {
             colors: {
+                primary: {
+                    DEFAULT: "#10B981", // Emerald 500
+                    foreground: 'hsl(var(--primary-foreground))',
+                    hover: "#059669", // Emerald 600
+                },
+                primary_hover: "#059669", // Emerald 600
+                "background-light": "#F3F4F6", // Gray 100
+                "background-dark": "#09090b", // Zinc 950
+                "card-light": "#FFFFFF",
+                "card-dark": "#18181b", // Zinc 900
+                "border-light": "#E5E7EB", // Gray 200
+                "border-dark": "#27272a", // Zinc 800,
                 background: 'hsl(var(--background))',
                 foreground: 'hsl(var(--foreground))',
                 card: {
@@ -21,10 +33,10 @@ const config: Config = {
                     DEFAULT: 'hsl(var(--popover))',
                     foreground: 'hsl(var(--popover-foreground))'
                 },
-                primary: {
-                    DEFAULT: 'hsl(var(--primary))',
-                    foreground: 'hsl(var(--primary-foreground))'
-                },
+                // primary: {
+                //     DEFAULT: 'hsl(var(--primary))',
+                //     foreground: 'hsl(var(--primary-foreground))'
+                // },
                 secondary: {
                     DEFAULT: 'hsl(var(--secondary))',
                     foreground: 'hsl(var(--secondary-foreground))'
