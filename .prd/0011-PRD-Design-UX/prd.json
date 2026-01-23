@@ -1,0 +1,62 @@
+{
+    "prdName": "design-ux",
+    "tasks": [
+        {
+            "id": "design-system-update-1",
+            "category": "frontend",
+            "description": "Refine Design System for Cognitive Ease",
+            "steps": [
+                "Update tailwind.config.ts with calming/focus palettes",
+                "Standardize button/input sizes for easy clicking (Fitts's Law)",
+                "Verify high contrast for text readability"
+            ],
+            "passes": true
+        },
+        {
+            "id": "focus-mode-1",
+            "category": "frontend",
+            "description": "Implement Focus Layout",
+            "steps": [
+                "Create src/components/layout/FocusLayout.tsx",
+                "Implement navigation hiding logic",
+                "Verify persistence of user context in focus mode"
+            ],
+            "passes": true
+        },
+        {
+            "id": "gamification-1",
+            "category": "frontend",
+            "description": "Implement Micro-interactions",
+            "steps": [
+                "Add completion animations (confetti/checkmark)",
+                "Implement smooth page transitions (Framer Motion)",
+                "Verify feedback is immediate (<100ms)"
+            ],
+            "passes": true
+        },
+        {
+            "id": "testing-ui-1",
+            "category": "testing",
+            "description": "UI/UX Regression Tests",
+            "steps": [
+                "Create component tests for FocusLayout",
+                "Run E2E test for full workflow completion"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Tailwind CSS",
+            "Framer Motion",
+            "Responsive Design"
+        ],
+        "keyFiles": [
+            "tailwind.config.ts",
+            "src/app/layout.tsx"
+        ],
+        "nonGoals": [
+            "Rebranding"
+        ]
+    }
+}

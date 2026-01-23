@@ -19,6 +19,39 @@ export const getSchedule = query({
     },
 });
 
+// Create initial schedule for a user
+export const createInitialSchedule = mutation({
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            throw new Error("Not authenticated");
+        }
+
+        // Check if schedule already exists
+        const existing = await ctx.db
+            .query("schedules")
+            .withIndex("by_user", (q) => q.eq("userId", userId))
+            .first();
+
+        if (existing) {
+            return existing._id;
+        }
+
+        // Create new schedule with defaults
+        return await ctx.db.insert("schedules", {
+            userId,
+            weeklyDay: "Sunday",
+            weeklyTime: "10:00",
+            eveningDays: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            eveningTime: "17:00",
+            includeSaturday: false,
+            includeSundayRecap: false,
+            retryIntervalMinutes: 30,
+        });
+    },
+});
+
 // Update schedule settings
 export const updateSchedule = mutation({
     args: {

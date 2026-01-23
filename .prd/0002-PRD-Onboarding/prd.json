@@ -1,0 +1,65 @@
+{
+    "prdName": "onboarding",
+    "tasks": [
+        {
+            "id": "backend-vision-1",
+            "category": "backend",
+            "description": "Implement mutations for Vision Profile and User Preferences",
+            "steps": [
+                "Create/Update convex/visionProfiles.ts with createVisionProfile mutation",
+                "Implement mutation to update user preferences (tone, timezone) in convex/users.ts",
+                "Verify existing visionProfiles table schema matches requirements"
+            ],
+            "passes": true
+        },
+        {
+            "id": "backend-schedule-1",
+            "category": "backend",
+            "description": "Implement mutation for initial Schedule setup",
+            "steps": [
+                "Create/Update convex/schedules.ts with createInitialSchedule mutation",
+                "Ensure it sets defaults: weeklyDay='Sunday', eveningTime='17:00'",
+                "Verify linkage to userId"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-wizard-1",
+            "category": "frontend",
+            "description": "Create multi-step Onboarding Wizard UI",
+            "steps": [
+                "Create src/app/onboarding/page.tsx",
+                "Implement Step 1: Basic Info (Name, Timezone)",
+                "Implement Step 2: Vision (Summary, Motivations, Cost of Inaction)",
+                "Implement Step 3: Preferences (Tone, Call Times)",
+                "Implement state management for wizard steps"
+            ],
+            "passes": true
+        },
+        {
+            "id": "integration-1",
+            "category": "integration",
+            "description": "Wire up frontend wizard to backend mutations",
+            "steps": [
+                "Connect Submit button to createVisionProfile and update mutations",
+                "Redirect to /dashboard on success",
+                "Verify data persistence in Convex dashboard"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex Mutations",
+            "React/Next.js Pages"
+        ],
+        "keyFiles": [
+            "convex/schema.ts",
+            "convex/visionProfiles.ts",
+            "src/app/onboarding/page.tsx"
+        ],
+        "nonGoals": [
+            "Voice calibration"
+        ]
+    }
+}

@@ -1,0 +1,1 @@
+# Progress: Deployment\n\n- [ ] Configure Vercel Prod\n- [ ] Configure Convex Prod\n- [ ] Setup GitHub Actions

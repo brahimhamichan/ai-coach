@@ -1,0 +1,52 @@
+{
+    "prdName": "notifications-messaging",
+    "tasks": [
+        {
+            "id": "setup-provider-1",
+            "category": "backend",
+            "description": "Configure Messaging Provider (Twilio)",
+            "steps": [
+                "Create convex/messaging.ts",
+                "Implement sendSMS action",
+                "Implement sendWhatsApp action (if supported)",
+                "Verify delivery with test number"
+            ],
+            "passes": true
+        },
+        {
+            "id": "notification-logic-1",
+            "category": "backend",
+            "description": "Implement Notification Triggers",
+            "steps": [
+                "Implement triggerReminder notification logic",
+                "Integrate with cron/scheduler to fire 5 mins before call",
+                "Verify notifications only sent if enabled in user prefs"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-prefs-1",
+            "category": "frontend",
+            "description": "Implement Notification Preferences UI",
+            "steps": [
+                "Add toggles to Settings page for SMS/WhatsApp",
+                "Add field for WhatsApp number",
+                "Verify persistence to users table"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex Actions",
+            "External APIs"
+        ],
+        "keyFiles": [
+            "convex/messaging.ts",
+            "convex/schema.ts"
+        ],
+        "nonGoals": [
+            "Two-way chat bot"
+        ]
+    }
+}

@@ -12,14 +12,18 @@ export default defineSchema({
     emailVerificationTime: v.optional(v.number()),
     phone: v.optional(v.string()),
     phoneVerificationTime: v.optional(v.number()),
+    phoneVerificationCode: v.optional(v.string()),
+    phoneVerificationExpires: v.optional(v.number()),
     isAnonymous: v.optional(v.boolean()),
 
     // App specific fields
     whatsappPhone: v.optional(v.string()),
+    whatsappEnabled: v.optional(v.boolean()),
     timezone: v.optional(v.string()), // Made optional for auth flow
     coachingTone: v.optional(v.string()), // default: "supportive"
     smsEnabled: v.optional(v.boolean()),  // Made optional for auth flow
     pushEnabled: v.optional(v.boolean()), // Made optional for auth flow
+    onboarded: v.optional(v.boolean()),
   }).index("email", ["email"])
     .index("by_phone", ["phone"]),
 
@@ -59,7 +63,6 @@ export default defineSchema({
     commitmentLevel: v.optional(v.number()), // 1-10
   }).index("by_user_week", ["userId", "weekStartDate"]),
 
-  // Daily action plans from evening calls
   // Daily action plans from evening calls (Planning Tomorrow)
   dailyPlans: defineTable({
     userId: v.id("users"),
@@ -160,4 +163,26 @@ export default defineSchema({
   }).index("by_user", ["userId"])
     .index("by_vapi_call_id", ["vapiCallId"])
     .index("by_session", ["callSessionId"]),
+
+  // Notifications log
+  notifications: defineTable({
+    userId: v.id("users"),
+    type: v.union(v.literal("reminder"), v.literal("update"), v.literal("alert")),
+    message: v.string(),
+    sentVia: v.optional(v.union(v.literal("sms"), v.literal("whatsapp"), v.literal("email"), v.literal("push"))),
+    sentAt: v.number(),
+    status: v.union(v.literal("sent"), v.literal("failed"), v.literal("skipped")),
+  }).index("by_user", ["userId"]),
+
+  // Resources library
+  resources: defineTable({
+    title: v.string(),
+    description: v.string(),
+    type: v.union(v.literal("article"), v.literal("video"), v.literal("template"), v.literal("tool")),
+    url: v.optional(v.string()),
+    content: v.optional(v.string()),
+    category: v.union(v.literal("productivity"), v.literal("mindset"), v.literal("strategy"), v.literal("technical")),
+    tags: v.array(v.string()),
+    featured: v.boolean(),
+  }).index("by_category", ["category"]),
 });

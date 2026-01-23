@@ -1,4 +1,4 @@
-import { query, internalMutation } from "./_generated/server";
+import { query, internalMutation, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
@@ -93,5 +93,55 @@ export const createWeeklyObjective = internalMutation({
     },
 });
 
-// Note: Weekly objectives are ONLY created via Vapi webhook after weekly call
-// No manual creation mutation - this is a call-owned artifact
+// Create weekly objective manually (for user entry)
+export const createManualWeeklyObjective = mutation({
+    args: {
+        weekStartDate: v.string(),
+        objective: v.string(),
+        bottlenecks: v.array(v.string()),
+        actions: v.array(v.string()),
+        stopList: v.array(v.string()),
+        startList: v.array(v.string()),
+        continueList: v.array(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        // Check if objective already exists for this week
+        const existing = await ctx.db
+            .query("weeklyObjectives")
+            .withIndex("by_user_week", (q) =>
+                q.eq("userId", userId).eq("weekStartDate", args.weekStartDate)
+            )
+            .first();
+
+        if (existing) {
+            // Update existing objective
+            await ctx.db.patch(existing._id, {
+                objective: args.objective,
+                bottlenecks: args.bottlenecks,
+                actions: args.actions,
+                stopList: args.stopList,
+                startList: args.startList,
+                continueList: args.continueList,
+            });
+            return existing._id;
+        }
+
+        // Create new objective
+        return await ctx.db.insert("weeklyObjectives", {
+            userId,
+            weekStartDate: args.weekStartDate,
+            objective: args.objective,
+            bottlenecks: args.bottlenecks,
+            actions: args.actions,
+            stopList: args.stopList,
+            startList: args.startList,
+            continueList: args.continueList,
+        });
+    },
+});
+
+// Note: Weekly objectives are primarily created via Vapi webhook after weekly call
+// Manual creation is available for user convenience

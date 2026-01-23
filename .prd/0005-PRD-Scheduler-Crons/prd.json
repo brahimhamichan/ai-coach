@@ -1,0 +1,50 @@
+{
+    "prdName": "scheduler-crons",
+    "tasks": [
+        {
+            "id": "setup-cron-1",
+            "category": "backend",
+            "description": "Configure Convex Crons",
+            "steps": [
+                "Create convex/crons.ts",
+                "Define scheduleCalls cron job",
+                "Verify cron registration in dashboard"
+            ],
+            "passes": true
+        },
+        {
+            "id": "scheduling-logic-1",
+            "category": "backend",
+            "description": "Implement Daily Scheduling Logic",
+            "steps": [
+                "Implement query to fetch active schedules",
+                "Implement logic to match current server time with user local time preference",
+                "Create callSessions record for valid matches"
+            ],
+            "passes": true
+        },
+        {
+            "id": "idempotency-1",
+            "category": "backend",
+            "description": "Ensure Idempotency",
+            "steps": [
+                "Add check for existing session for same day/type",
+                "Verify no duplicate sessions created on multiple cron runs"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex Crons",
+            "Date/Time handling"
+        ],
+        "keyFiles": [
+            "convex/crons.ts",
+            "convex/schedules.ts"
+        ],
+        "nonGoals": [
+            "Real-time instant scheduling"
+        ]
+    }
+}

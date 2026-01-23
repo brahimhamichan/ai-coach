@@ -1,0 +1,75 @@
+{
+    "prdName": "convex-auth",
+    "tasks": [
+        {
+            "id": "setup-verification-1",
+            "category": "setup",
+            "description": "Verify existing Convex Auth setup and environment variables",
+            "steps": [
+                "Check COMPLETED: convex/auth.ts exists and exports auth, signIn, etc.",
+                "Check COMPLETED: convex/schema.ts spreads authTables",
+                "Verify AUTH_RESEND_KEY is set in environment variables (for upcoming email task)"
+            ],
+            "passes": true
+        },
+        {
+            "id": "impl-email-otp",
+            "category": "implementation",
+            "description": "Enable Email (OTP/Magic Link) authentication via Resend",
+            "steps": [
+                "Uncomment Resend provider in convex/auth.ts",
+                "Configure 'from' email address in Resend provider config",
+                "Verify existing sign up flow using Resend logic if applicable"
+            ],
+            "passes": true
+        },
+        {
+            "id": "impl-google-oauth",
+            "category": "implementation",
+            "description": "Implement Google OAuth provider",
+            "steps": [
+                "Import Google from @convex-dev/auth/providers/Google in convex/auth.ts",
+                "Add Google provider to the providers array in convex/auth.ts",
+                "Verify AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET env vars are set"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-verification-1",
+            "category": "frontend",
+            "description": "Verify frontend integration for Auth UI",
+            "steps": [
+                "Verify /signup page functionality with new providers",
+                "Verify /login page functionality with new providers",
+                "Check usage of useAuthActions for signIn/signOut in components"
+            ],
+            "passes": true
+        },
+        {
+            "id": "e2e-testing-1",
+            "category": "verification",
+            "description": "Run Playwright E2E tests",
+            "steps": [
+                "Run 'npx playwright test tests/auth.spec.ts'",
+                "Ensure tests pass for signup and login flow"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "@convex-dev/auth pattern in convex/auth.ts",
+            "Playwright testing in tests/auth.spec.ts"
+        ],
+        "keyFiles": [
+            "convex/auth.ts",
+            "convex/schema.ts",
+            "tests/auth.spec.ts",
+            "src/app/signup/page.tsx",
+            "src/app/login/page.tsx"
+        ],
+        "nonGoals": [
+            "Replacing shadcn/ui components"
+        ]
+    }
+}

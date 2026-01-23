@@ -14,10 +14,15 @@ import type * as callSessions from "../callSessions.js";
 import type * as callSummaries from "../callSummaries.js";
 import type * as calls from "../calls.js";
 import type * as commitmentLogs from "../commitmentLogs.js";
+import type * as crons from "../crons.js";
 import type * as dailyPlans from "../dailyPlans.js";
 import type * as dashboard from "../dashboard.js";
 import type * as debug from "../debug.js";
+import type * as demo from "../demo.js";
+import type * as history from "../history.js";
 import type * as http from "../http.js";
+import type * as messaging from "../messaging.js";
+import type * as resources from "../resources.js";
 import type * as schedules from "../schedules.js";
 import type * as users from "../users.js";
 import type * as vapi from "../vapi.js";
@@ -27,6 +32,7 @@ import type * as vapi_tools_utils from "../vapi/tools/utils.js";
 import type * as vapi_tools_weekly from "../vapi/tools/weekly.js";
 import type * as visionProfiles from "../visionProfiles.js";
 import type * as weeklyObjectives from "../weeklyObjectives.js";
+import type * as workflow from "../workflow.js";
 
 import type {
   ApiFromModules,
@@ -41,10 +47,15 @@ declare const fullApi: ApiFromModules<{
   callSummaries: typeof callSummaries;
   calls: typeof calls;
   commitmentLogs: typeof commitmentLogs;
+  crons: typeof crons;
   dailyPlans: typeof dailyPlans;
   dashboard: typeof dashboard;
   debug: typeof debug;
+  demo: typeof demo;
+  history: typeof history;
   http: typeof http;
+  messaging: typeof messaging;
+  resources: typeof resources;
   schedules: typeof schedules;
   users: typeof users;
   vapi: typeof vapi;
@@ -54,6 +65,7 @@ declare const fullApi: ApiFromModules<{
   "vapi/tools/weekly": typeof vapi_tools_weekly;
   visionProfiles: typeof visionProfiles;
   weeklyObjectives: typeof weeklyObjectives;
+  workflow: typeof workflow;
 }>;
 
 /**

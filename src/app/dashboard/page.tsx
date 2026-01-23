@@ -6,13 +6,14 @@ export const dynamic = "force-dynamic";
 import { useQuery, useMutation } from "convex/react";
 import { useEffect } from "react";
 import { api } from "../../../convex/_generated/api";
+import { useRouter } from "next/navigation";
 import { VisionCard } from "@/components/VisionCard";
 import { WeeklyCard } from "@/components/WeeklyCard";
 import { TodayCard } from "@/components/TodayCard";
 import { SummaryBanner } from "@/components/SummaryBanner";
-import styles from "./page.module.css";
 
 export default function Dashboard() {
+  const router = useRouter();
   // Get authenticated user
   const user = useQuery(api.users.viewer);
   // Initialize user if needed (creates schedule etc)
@@ -26,10 +27,15 @@ export default function Dashboard() {
       initializeUser({
         timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       });
-    }
-  }, [user, initializeUser]);
 
-  // Fetch dashboard data 
+      // Redirect if not onboarded
+      if (user.onboarded === false || user.onboarded === undefined) {
+        router.push("/onboarding");
+      }
+    }
+  }, [user, initializeUser, router]);
+
+  // Fetch dashboard data
   const vision = useQuery(api.visionProfiles.getVisionProfile);
   const weeklyObjective = useQuery(api.weeklyObjectives.getCurrentWeekObjective);
   const todayPlan = useQuery(api.dailyPlans.getTodayPlan);
@@ -41,45 +47,51 @@ export default function Dashboard() {
   const nextCall = useQuery(api.callSessions.getNextCall);
 
   return (
-    <div className={styles.page}>
-
-
-      <main className={styles.main}>
-        <header className={styles.header}>
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className={styles.title}>Dashboard</h1>
-              <p className={styles.subtitle}>
-                {getGreeting()}, let's make today count.
+    <div className="min-h-screen bg-background pb-12">
+      <main className="container mx-auto px-4 pt-6 md:pt-10 max-w-6xl">
+        <header className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
+            <p className="mt-1 text-lg text-muted-foreground">
+              {getGreeting()}, let's make today count.
+            </p>
+          </div>
+          {nextCall && (
+            <div className="flex items-center gap-3 rounded-lg border bg-card px-4 py-2 shadow-sm md:flex-col md:items-end md:border-none md:bg-transparent md:p-0 md:shadow-none">
+              <p className="text-sm font-medium text-muted-foreground">Next call</p>
+              <p className="text-lg font-semibold text-primary">
+                {formatNextCallTime(nextCall.date)}
               </p>
             </div>
-            {nextCall && (
-              <div className="text-right">
-                <p className="text-sm font-medium text-muted-foreground">Next call</p>
-                <p className="text-lg font-semibold text-primary">
-                  {formatNextCallTime(nextCall.date)}
-                </p>
-              </div>
-            )}
-          </div>
+          )}
         </header>
 
         {/* Summary Banner - only shows if summaries exist */}
-        <SummaryBanner summary={latestSummary} />
+        <div className="mb-8">
+          <SummaryBanner summary={latestSummary} />
+        </div>
 
-        <div className={styles.grid}>
-          {/* Vision Card - collapsed by default when empty */}
-          <VisionCard vision={vision} isLoading={isLoading} />
+        <div className="grid gap-6 md:grid-cols-12 md:gap-8">
+          {/* Main Content Area - Left Column */}
+          <div className="flex flex-col gap-6 md:col-span-8">
+            {/* Weekly Objective Card */}
+            <WeeklyCard objective={weeklyObjective} isLoading={isLoading} />
 
-          {/* Weekly Objective Card */}
-          <WeeklyCard objective={weeklyObjective} isLoading={isLoading} />
+            {/* Today/Tomorrow Actions Card */}
+            <TodayCard
+              todayPlan={todayPlan}
+              tomorrowPlan={tomorrowPlan}
+              isLoading={isLoading}
+            />
+          </div>
 
-          {/* Today/Tomorrow Actions Card */}
-          <TodayCard
-            todayPlan={todayPlan}
-            tomorrowPlan={tomorrowPlan}
-            isLoading={isLoading}
-          />
+          {/* Sidebar Area - Right Column */}
+          <div className="flex flex-col gap-6 md:col-span-4">
+            {/* Vision Card - Sticky on desktop */}
+            <div className="sticky top-24">
+              <VisionCard vision={vision} isLoading={isLoading} />
+            </div>
+          </div>
         </div>
       </main>
     </div>

@@ -265,6 +265,35 @@ export default function SettingsPage() {
 
                                 <div className="flex items-center justify-between rounded-lg border p-4">
                                     <div className="space-y-0.5">
+                                        <Label className="text-base" htmlFor="whatsappEnabled">
+                                            WhatsApp Notifications
+                                        </Label>
+                                        <p className="text-sm text-muted-foreground">
+                                            Receive notifications via WhatsApp.
+                                        </p>
+                                    </div>
+                                    <Switch
+                                        id="whatsappEnabled"
+                                        checked={user?.whatsappEnabled || false}
+                                        onChange={(e) => handleUserUpdate("whatsappEnabled", e.target.checked)}
+                                        disabled={isSaving}
+                                    />
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="whatsappPhone">WhatsApp Number</Label>
+                                    <Input
+                                        id="whatsappPhone"
+                                        type="tel"
+                                        placeholder="+1234567890"
+                                        value={user?.whatsappPhone || ""}
+                                        onChange={(e) => handleUserUpdate("whatsappPhone", e.target.value)}
+                                        disabled={isSaving}
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-between rounded-lg border p-4">
+                                    <div className="space-y-0.5">
                                         <Label className="text-base" htmlFor="pushEnabled">
                                             Push Notifications
                                         </Label>

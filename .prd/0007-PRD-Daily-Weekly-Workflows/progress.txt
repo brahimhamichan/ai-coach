@@ -1,0 +1,7 @@
+Daily/Weekly Workflows PRD completed successfully.
+- Backend workflow state logic implemented in convex/workflow.ts
+- Manual daily plan entry added to convex/dailyPlans.ts with createManualDailyPlan mutation
+- Manual weekly objective creation added to convex/weeklyObjectives.ts with createManualWeeklyObjective mutation
+- Daily Plan UI created at src/app/workflows/daily-plan/page.tsx with form for 3 actions
+- Weekly Review UI created at src/app/workflows/weekly-review/page.tsx with comprehensive review forms
+- Workflow state transitions based on time and completion status

@@ -1,0 +1,40 @@
+{
+    "prdName": "resources",
+    "tasks": [
+        {
+            "id": "backend-resources-1",
+            "category": "backend",
+            "description": "Implement Resources Schema & Data",
+            "steps": [
+                "Add resources table to convex/schema.ts",
+                "Create seed script for initial content",
+                "Implement getResources query"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-resources-1",
+            "category": "frontend",
+            "description": "Implement Resources Page UI",
+            "steps": [
+                "Create src/app/resources/page.tsx",
+                "Implement Grid View of resources",
+                "Implement Resource Detail view",
+                "Verify navigation"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "CMS-like structure"
+        ],
+        "keyFiles": [
+            "convex/schema.ts",
+            "src/app/resources/page.tsx"
+        ],
+        "nonGoals": [
+            "User-generated content"
+        ]
+    }
+}

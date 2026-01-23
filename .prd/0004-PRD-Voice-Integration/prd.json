@@ -1,0 +1,63 @@
+{
+    "prdName": "voice-integration",
+    "tasks": [
+        {
+            "id": "setup-vapi-1",
+            "category": "backend",
+            "description": "Configure Vapi Backend Integration",
+            "steps": [
+                "Verify VAPI_PRIVATE_KEY in Convex env vars",
+                "Implement/Verify Vapi client helper in convex/vapi.ts"
+            ],
+            "passes": true
+        },
+        {
+            "id": "trigger-call-1",
+            "category": "backend",
+            "description": "Implement Outbound Call Trigger",
+            "steps": [
+                "Create/Verify triggerOutboundCall mutation in convex/vapi.ts",
+                "Ensure it calls Vapi API correctly with phone number and assistant ID",
+                "Verify creation of 'calls' record"
+            ],
+            "passes": true
+        },
+        {
+            "id": "webhook-handler-1",
+            "category": "backend",
+            "description": "Implement Vapi Webhook Handler",
+            "steps": [
+                "Create/Verify POST /vapi-webhook handler in convex/http.ts",
+                "Handle 'call.status-update' events",
+                "Handle 'call.analysis' (summary/transcript) events",
+                "Verify database updates for calls and callSessions tables"
+            ],
+            "passes": true
+        },
+        {
+            "id": "session-tracking-1",
+            "category": "backend",
+            "description": "Implement Call Session Lifecycle",
+            "steps": [
+                "Verify callSessions transition from 'scheduled' to 'completed'",
+                "Verify callSummaries creation upon call completion",
+                "Test full flow: Trigger -> Webhook Update -> Session Complete"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex HTTP Actions",
+            "Vapi Webhooks"
+        ],
+        "keyFiles": [
+            "convex/vapi.ts",
+            "convex/http.ts",
+            "convex/schema.ts"
+        ],
+        "nonGoals": [
+            "Inbound call handling"
+        ]
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "prdName": "dashboard",
+    "tasks": [
+        {
+            "id": "backend-query-1",
+            "category": "backend",
+            "description": "Optimize getDashboardData query",
+            "steps": [
+                "Verify convex/dashboard.ts getDashboardData logic",
+                "Ensure efficient indexing (by_user, by_user_date)",
+                "Verify return type matches frontend expectations"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-ui-1",
+            "category": "frontend",
+            "description": "Finalize Dash 2 UI Components",
+            "steps": [
+                "Verify Vision Card rendering and Edit mode",
+                "Verify Weekly Objective Card displays extracted data",
+                "Verify Next Actions list rendering"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-interactive-1",
+            "category": "frontend",
+            "description": "Implement Dashboard Interactivity",
+            "steps": [
+                "Test 'Add Action' functionality",
+                "Test 'Toggle Complete' functionality",
+                "Test 'Save Vision' functionality"
+            ],
+            "passes": true
+        },
+        {
+            "id": "call-trigger-1",
+            "category": "integration",
+            "description": "Implement Call Trigger Integration",
+            "steps": [
+                "Verify Call Me button invokes api.vapi.triggerOutboundCall",
+                "Verify error handling for missing phone numbers"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex Query/Mutation",
+            "React State for UI"
+        ],
+        "keyFiles": [
+            "convex/dashboard.ts",
+            "src/app/dash-2/page.tsx"
+        ],
+        "nonGoals": [
+            "History page",
+            "Resources page"
+        ]
+    }
+}

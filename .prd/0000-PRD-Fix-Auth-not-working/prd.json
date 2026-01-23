@@ -1,0 +1,10 @@
+{
+  "id": "0012",
+  "name": "PRD-Fix-Auth-Emergency",
+  "title": "Emergency PRD: Authentication Fix",
+  "status": "in-progress",
+  "priority": "P0",
+  "category": "Security/Auth",
+  "created_at": "2026-01-23",
+  "updated_at": "2026-01-23"
+}

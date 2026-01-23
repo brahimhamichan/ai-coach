@@ -1,0 +1,51 @@
+{
+    "prdName": "settings-profile",
+    "tasks": [
+        {
+            "id": "profile-update-1",
+            "category": "backend",
+            "description": "Implement User Profile Mutations",
+            "steps": [
+                "Update convex/users.ts with updateUser mutation",
+                "Verify updates to name, image, timezone",
+                "Verify permission checks (only own profile)"
+            ],
+            "passes": true
+        },
+        {
+            "id": "phone-verification-1",
+            "category": "backend",
+            "description": "Implement Phone Verification Logic",
+            "steps": [
+                "Implement initiatePhoneVerification mutation",
+                "Implement verifyPhoneCode mutation",
+                "Verify phone number is only saved after code check"
+            ],
+            "passes": true
+        },
+        {
+            "id": "settings-ui-1",
+            "category": "frontend",
+            "description": "Implement Settings Page UI",
+            "steps": [
+                "Create/Update src/app/settings/page.tsx",
+                "Connect Profile form to mutations",
+                "Implement Phone Verification UI flow"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex Mutations",
+            "Form Handling"
+        ],
+        "keyFiles": [
+            "convex/users.ts",
+            "src/app/settings/page.tsx"
+        ],
+        "nonGoals": [
+            "Payment method management"
+        ]
+    }
+}

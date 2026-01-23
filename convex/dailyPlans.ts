@@ -1,4 +1,4 @@
-import { query, internalMutation } from "./_generated/server";
+import { query, internalMutation, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
@@ -105,5 +105,80 @@ export const createDailyPlan = internalMutation({
     },
 });
 
-// Note: Daily plans are ONLY created via Vapi webhook after evening call
-// No manual creation mutation - this is a call-owned artifact
+// Create daily plan manually (for user entry)
+export const createManualDailyPlan = mutation({
+    args: {
+        date: v.string(),
+        actions: v.array(v.object({
+            text: v.string(),
+            completed: v.optional(v.boolean()),
+        })),
+        startTime: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        // Check if plan already exists for this date
+        const existing = await ctx.db
+            .query("dailyPlans")
+            .withIndex("by_user_date", (q) =>
+                q.eq("userId", userId).eq("date", args.date)
+            )
+            .first();
+
+        if (existing) {
+            // Update existing plan
+            await ctx.db.patch(existing._id, {
+                actions: args.actions,
+                startTime: args.startTime,
+            });
+            return existing._id;
+        }
+
+        // Create new plan
+        return await ctx.db.insert("dailyPlans", {
+            userId,
+            date: args.date,
+            actions: args.actions,
+            startTime: args.startTime,
+        });
+    },
+});
+
+// Add single action to today's plan
+export const addNextAction = mutation({
+    args: {
+        text: v.string(),
+        date: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        const targetDate = args.date || new Date().toISOString().split("T")[0];
+
+        const existingPlan = await ctx.db
+            .query("dailyPlans")
+            .withIndex("by_user_date", (q) =>
+                q.eq("userId", userId).eq("date", targetDate)
+            )
+            .first();
+
+        if (existingPlan) {
+            await ctx.db.patch(existingPlan._id, {
+                actions: [...existingPlan.actions, { text: args.text, completed: false }],
+            });
+        } else {
+            // Create new plan if none exists for today
+            await ctx.db.insert("dailyPlans", {
+                userId,
+                date: targetDate,
+                actions: [{ text: args.text, completed: false }],
+            });
+        }
+    },
+});
+
+// Note: Daily plans are primarily created via Vapi webhook after evening call
+// Manual creation is available for user convenience

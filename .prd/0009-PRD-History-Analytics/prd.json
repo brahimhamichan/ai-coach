@@ -1,0 +1,41 @@
+{
+    "prdName": "history-analytics",
+    "tasks": [
+        {
+            "id": "backend-history-1",
+            "category": "backend",
+            "description": "Implement History Queries",
+            "steps": [
+                "Create convex/history.ts",
+                "Implement getPastPlans query with pagination/date range",
+                "Implement getCompletionStats query"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-history-1",
+            "category": "frontend",
+            "description": "Implement History Page UI",
+            "steps": [
+                "Create src/app/history/page.tsx",
+                "Implement Calendar/List view",
+                "Implement Plan Detail modal/view",
+                "Verify data loading and empty states"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex Pagination",
+            "Recharts (optional)"
+        ],
+        "keyFiles": [
+            "convex/dailyPlans.ts",
+            "src/app/history/page.tsx"
+        ],
+        "nonGoals": [
+            "AI insights"
+        ]
+    }
+}

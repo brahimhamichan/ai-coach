@@ -1,0 +1,55 @@
+{
+    "prdName": "daily-weekly-workflows",
+    "tasks": [
+        {
+            "id": "backend-workflow-state-1",
+            "category": "backend",
+            "description": "Implement Workflow State Logic",
+            "steps": [
+                "Create convex/workflow.ts",
+                "Implement getCurrentWorkflowState query",
+                "Verify state transitions based on time and completion"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-daily-1",
+            "category": "frontend",
+            "description": "Implement Daily Plan UI",
+            "steps": [
+                "Create src/app/workflows/daily-plan/page.tsx",
+                "Implement form for 3 actions + start time",
+                "Connect to addNextAction/createDailyPlan mutations",
+                "Verify manual entry workflow"
+            ],
+            "passes": true
+        },
+        {
+            "id": "frontend-weekly-1",
+            "category": "frontend",
+            "description": "Implement Weekly Review UI",
+            "steps": [
+                "Create src/app/workflows/weekly-review/page.tsx",
+                "Implement form for Last Week Review (Wins/Misses)",
+                "Implement form for Next Week Objective",
+                "Connect to weeklyObjectives mutations"
+            ],
+            "passes": true
+        }
+    ],
+    "context": {
+        "patterns": [
+            "Convex Query/mutations",
+            "Multi-step forms"
+        ],
+        "keyFiles": [
+            "convex/workflow.ts",
+            "convex/dailyPlans.ts",
+            "convex/weeklyObjectives.ts",
+            "src/app/workflows/daily-plan/page.tsx"
+        ],
+        "nonGoals": [
+            "AI generation of plans"
+        ]
+    }
+}

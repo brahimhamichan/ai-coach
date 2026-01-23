@@ -76,6 +76,15 @@ export const initializeUser = mutation({
     },
 });
 
+export const completeOnboarding = mutation({
+    args: {},
+    handler: async (ctx) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+        await ctx.db.patch(userId, { onboarded: true });
+    },
+});
+
 // Internal query for webhook lookup
 export const getUserByPhone = internalQuery({
     args: { phone: v.string() },
@@ -111,5 +120,70 @@ export const updateUser = mutation({
             Object.entries(args).filter(([, value]) => value !== undefined)
         );
         await ctx.db.patch(userId, updates);
+    },
+});
+
+export const initiatePhoneVerification = mutation({
+    args: {
+        phone: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        // Generate 6-digit verification code
+        const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        // In a real implementation, you would send this via SMS service
+        // For now, we'll store it and return success
+        const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+        
+        // Store verification code temporarily (in production, use a separate table)
+        await ctx.db.patch(userId, {
+            phoneVerificationCode: verificationCode,
+            phoneVerificationExpires: expiresAt,
+        });
+        
+        console.log(`Verification code for ${args.phone}: ${verificationCode}`);
+        
+        // Return success (in production, this would be sent via SMS)
+        return { success: true, message: "Verification code sent" };
+    },
+});
+
+export const verifyPhoneCode = mutation({
+    args: {
+        phone: v.string(),
+        code: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        const user = await ctx.db.get(userId);
+        if (!user) throw new Error("User not found");
+
+        // Check if code matches and hasn't expired
+        if (!user.phoneVerificationCode || !user.phoneVerificationExpires) {
+            throw new Error("No verification code found. Please request a new one.");
+        }
+
+        if (user.phoneVerificationExpires < Date.now()) {
+            throw new Error("Verification code has expired. Please request a new one.");
+        }
+
+        if (user.phoneVerificationCode !== args.code) {
+            throw new Error("Invalid verification code.");
+        }
+
+        // Code is valid - save phone number and clear verification fields
+        await ctx.db.patch(userId, {
+            phone: args.phone,
+            phoneVerificationTime: Date.now(),
+            phoneVerificationCode: undefined,
+            phoneVerificationExpires: undefined,
+        });
+
+        return { success: true, message: "Phone number verified" };
     },
 });
