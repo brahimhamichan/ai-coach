@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useMutation, useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
+import { api } from "../../../../convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -124,7 +124,7 @@ export default function DailyPlanPage() {
                             ))}
                         </div>
 
-                        <Button 
+                        <Button
                             onClick={handleSave}
                             disabled={isSaving || actions.filter(a => a.trim() === "").length > 0}
                             className="w-full"

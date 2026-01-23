@@ -19,11 +19,11 @@ export default function ResourcesPage() {
 
     const categories = ["productivity", "mindset", "strategy", "technical", "article", "video", "template", "tool"];
 
-    const filteredResources = resources?.filter(resource => 
+    const filteredResources = resources?.filter(resource =>
         (category ? resource.category === category : true) &&
-        (search ? resource.title.toLowerCase().includes(search.toLowerCase()) || 
-                 resource.description?.toLowerCase().includes(search.toLowerCase()) ||
-                 resource.tags?.some(tag => tag.toLowerCase().includes(search.toLowerCase())) : true)
+        (search ? resource.title.toLowerCase().includes(search.toLowerCase()) ||
+            resource.description?.toLowerCase().includes(search.toLowerCase()) ||
+            resource.tags?.some(tag => tag.toLowerCase().includes(search.toLowerCase())) : true)
     ) || [];
 
     return (
@@ -92,9 +92,9 @@ export default function ResourcesPage() {
                                         <div className="flex items-center gap-2">
                                             <Badge variant={
                                                 resource.category === "productivity" ? "default" :
-                                                resource.category === "mindset" ? "secondary" :
-                                                resource.category === "strategy" ? "outline" :
-                                                "destructive"
+                                                    resource.category === "mindset" ? "secondary" :
+                                                        resource.category === "strategy" ? "outline" :
+                                                            "destructive"
                                             }>
                                                 {resource.category}
                                             </Badge>
@@ -106,7 +106,7 @@ export default function ResourcesPage() {
                                             )}
                                         </div>
                                     </div>
-                                    </div>
+
                                     {resource.url && (
                                         <Button
                                             variant="outline"
@@ -122,7 +122,7 @@ export default function ResourcesPage() {
                                 <p className="text-sm text-muted-foreground mb-3">
                                     {resource.description}
                                 </p>
-                                
+
                                 {resource.tags && resource.tags.length > 0 && (
                                     <div className="flex flex-wrap gap-1">
                                         {resource.tags.map((tag) => (
@@ -145,10 +145,10 @@ export default function ResourcesPage() {
                                 <Filter className="h-12 w-12 mx-auto mb-4 text-gray-400" />
                                 <h3 className="text-lg font-medium mb-2">No resources found</h3>
                                 <p className="text-sm">
-                                    {search 
-                                        ? "No resources match your search criteria." 
-                                        : category 
-                                            ? `No resources found in the ${category} category.` 
+                                    {search
+                                        ? "No resources match your search criteria."
+                                        : category
+                                            ? `No resources found in the ${category} category.`
                                             : "No resources available."}
                                 </p>
                             </div>

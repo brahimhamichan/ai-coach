@@ -1,7 +1,6 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
@@ -20,18 +19,11 @@ export default function LoginPage() {
     const [isDemoLoading, setIsDemoLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const seedDemoData = useMutation(api.demo.seedDemoData);
-
     const handleDemoLogin = async () => {
         setIsDemoLoading(true);
         setError(null);
         try {
             await signIn("password", { email: "demo@example.com", password: "demo-password", flow: "signIn" });
-            try {
-                await seedDemoData();
-            } catch (seedError) {
-                console.error("Failed to seed demo data:", seedError);
-            }
             router.push("/");
             router.refresh();
         } catch (signInError: any) {
@@ -39,11 +31,6 @@ export default function LoginPage() {
             try {
                 // If sign-in fails, try to create the demo account
                 await signIn("password", { email: "demo@example.com", password: "demo-password", flow: "signUp", name: "Demo User" });
-                try {
-                    await seedDemoData();
-                } catch (seedError) {
-                    console.error("Failed to seed demo data:", seedError);
-                }
                 router.push("/");
                 router.refresh();
             } catch (signUpError: any) {

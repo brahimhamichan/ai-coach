@@ -7,10 +7,23 @@ import { useQuery, useMutation } from "convex/react";
 import { useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { cn } from "@/lib/utils";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogClose,
+} from "@/components/ui/dialog";
+
 
 const DAYS_OF_WEEK = [
     "Sunday",
@@ -39,8 +52,13 @@ export default function SettingsPage() {
 
     const updateUser = useMutation(api.users.updateUser);
     const updateSchedule = useMutation(api.schedules.updateSchedule);
+    const resetDemoOnboarding = useMutation(api.demo.resetDemoOnboarding);
+
+    const router = useRouter();
 
     const [isSaving, setIsSaving] = useState(false);
+    const [isResetting, setIsResetting] = useState(false);
+    const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
     const [saveMessage, setSaveMessage] = useState("");
 
     const handleUserUpdate = async (field: string, value: string | boolean) => {
@@ -69,6 +87,19 @@ export default function SettingsPage() {
             setSaveMessage("Failed to save");
         }
         setIsSaving(false);
+    };
+
+    const executeReset = async () => {
+        setIsResetting(true);
+        try {
+            await resetDemoOnboarding();
+            router.push("/onboarding");
+        } catch (error) {
+            console.error("Failed to reset demo:", error);
+            setSaveMessage("Failed to reset");
+            setIsResetting(false);
+        }
+        // No finally block to keep loading state during redirect
     };
 
     const isLoading = user === undefined || schedule === undefined;
@@ -310,6 +341,67 @@ export default function SettingsPage() {
                                 </div>
                             </CardContent>
                         </Card>
+
+                        {/* Demo Controls - Only visible for demo user */}
+                        {user?.email === "demo@example.com" && (
+                            <Card className="border-destructive/20 bg-destructive/5">
+                                <CardHeader>
+                                    <CardTitle className="text-destructive flex items-center gap-2">
+                                        <RotateCcw className="h-5 w-5" />
+                                        Demo Controls
+                                    </CardTitle>
+                                    <CardDescription>
+                                        These options are only available for the demo account.
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <div className="flex items-center justify-between rounded-lg border border-destructive/20 bg-background/50 p-4">
+                                        <div className="space-y-0.5">
+                                            <Label className="text-base text-destructive" htmlFor="resetDemo">
+                                                Reset Onboarding
+                                            </Label>
+                                            <p className="text-sm text-muted-foreground">
+                                                Clear all data and start onboarding from scratch.
+                                            </p>
+                                        </div>
+                                        <Dialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
+                                            <DialogTrigger asChild>
+                                                <Button
+                                                    variant="destructive"
+                                                    disabled={isResetting}
+                                                >
+                                                    Reset
+                                                </Button>
+                                            </DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader>
+                                                    <DialogTitle>Reset Onboarding?</DialogTitle>
+                                                    <DialogDescription>
+                                                        This will delete all your current data, including your vision, schedule, and habits. You will be redirected to the onboarding flow to start over. This action cannot be undone.
+                                                    </DialogDescription>
+                                                </DialogHeader>
+                                                <DialogFooter>
+                                                    <Button
+                                                        variant="outline"
+                                                        onClick={() => setIsResetDialogOpen(false)}
+                                                        disabled={isResetting}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                    <Button
+                                                        variant="destructive"
+                                                        onClick={executeReset}
+                                                        disabled={isResetting}
+                                                    >
+                                                        {isResetting ? "Resetting..." : "Yes, Reset Everything"}
+                                                    </Button>
+                                                </DialogFooter>
+                                            </DialogContent>
+                                        </Dialog>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
                     </div>
                 )}
             </main>

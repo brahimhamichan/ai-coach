@@ -1,5 +1,6 @@
 "use client";
 
+
 import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useState, useEffect } from "react";
@@ -9,6 +10,17 @@ import { usePathname } from "next/navigation";
 import { ThemeToggle } from "./ThemeToggle";
 import { useAlert } from "./AlertContext";
 import { useAuthActions } from "@convex-dev/auth/react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Phone, PhoneCall } from "lucide-react";
 
 export function Navigation() {
     const pathname = usePathname();
@@ -44,9 +56,9 @@ export function Navigation() {
         try {
             await triggerCall({ phone: user.phone, type: "daily-agent" });
             showAlert("Call triggered! Check your phone.", "Success");
-        } catch (error: any) {
+        } catch (error) {
             console.error(error);
-            const errorMessage = error.message || error.toString();
+            const errorMessage = error instanceof Error ? error.message : String(error);
             const displayMessage = errorMessage.replace(/ServerError: /, "");
             showAlert(`Failed to trigger call: ${displayMessage}`, "Error");
         } finally {
@@ -91,22 +103,39 @@ export function Navigation() {
             </div>
 
             <div className="flex items-center gap-4 ml-auto">
-                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                    <input
-                        type="text"
-                        placeholder="+1234567890"
-                        value={phoneInput}
-                        onChange={(e) => setPhoneInput(e.target.value)}
-                        onBlur={handlePhoneBlur}
-                        className="bg-muted text-foreground border rounded px-2 py-1 w-32 text-sm focus:outline-none focus:ring-1 focus:ring-primary hidden sm:block"
-                    />
+                <div className="flex items-center gap-2 bg-muted/50 p-1 pl-3 rounded-full border border-border/50 focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/20 transition-all duration-300 hover:bg-muted/80">
+                    <div className="flex items-center gap-2">
+                        <Phone className="w-4 h-4 text-muted-foreground" />
+                        <Input
+                            type="text"
+                            placeholder="Phone number"
+                            value={phoneInput}
+                            onChange={(e) => setPhoneInput(e.target.value)}
+                            onBlur={handlePhoneBlur}
+                            className="border-none bg-transparent h-8 w-32 px-0 focus-visible:ring-0 placeholder:text-muted-foreground/60 text-sm font-medium"
+                        />
+                    </div>
                     <Button
                         onClick={handleCallMe}
                         disabled={isCalling}
                         size="sm"
-                        className={isCalling ? "opacity-50" : "bg-green-600 hover:bg-green-700 text-white"}
+                        className={`rounded-full px-4 h-8 transition-all duration-300 ${isCalling
+                            ? "bg-muted text-muted-foreground"
+                            : "bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40"
+                            }`}
                     >
-                        {isCalling ? "Calling..." : "📞 Call Me"}
+                        {isCalling ? (
+                            <span className="flex items-center gap-2">
+                                <span className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: "0ms" }} />
+                                <span className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: "150ms" }} />
+                                <span className="h-2 w-2 rounded-full bg-current animate-bounce" style={{ animationDelay: "300ms" }} />
+                            </span>
+                        ) : (
+                            <span className="flex items-center gap-1.5">
+                                <PhoneCall className="w-3.5 h-3.5" />
+                                <span>Call Me</span>
+                            </span>
+                        )}
                     </Button>
                 </div>
 
@@ -150,13 +179,4 @@ export function Navigation() {
     );
 }
 
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+

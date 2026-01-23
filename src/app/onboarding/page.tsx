@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { ChevronRight, ChevronLeft, Check, Sparkles, Target, Clock, Zap } from "lucide-react";
+import { ChevronRight, ChevronLeft, Check, Sparkles, Target, Clock, Zap, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function OnboardingPage() {
@@ -20,9 +20,15 @@ export default function OnboardingPage() {
     const saveVisionProfile = useMutation(api.visionProfiles.saveVisionProfile);
     const updateSchedule = useMutation(api.schedules.updateSchedule);
     const completeOnboarding = useMutation(api.users.completeOnboarding);
+    const triggerCall = useAction(api.vapi.triggerOutboundCall);
 
     const [step, setStep] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
+
+    // Call Me Now State
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [isCalling, setIsCalling] = useState(false);
+    const [callStatus, setCallStatus] = useState<"idle" | "success" | "error">("idle");
 
     // Form State
     const [name, setName] = useState("");
@@ -38,6 +44,22 @@ export default function OnboardingPage() {
 
     const nextStep = () => setStep(s => s + 1);
     const prevStep = () => setStep(s => s - 1);
+
+    const handleCallMe = async () => {
+        if (!phoneNumber) return;
+        setIsCalling(true);
+        setCallStatus("idle");
+        try {
+            await triggerCall({ phone: phoneNumber, type: "onboarding-agent" });
+            setCallStatus("success");
+            // Optionally auto-advance or show instructions
+        } catch (error) {
+            console.error("Failed to trigger call:", error);
+            setCallStatus("error");
+        } finally {
+            setIsCalling(false);
+        }
+    };
 
     const handleComplete = async () => {
         setIsLoading(true);
@@ -204,6 +226,54 @@ export default function OnboardingPage() {
                         </div>
                     ))}
                 </div>
+
+                {/* Call Me Now Section */}
+                <Card className="mb-8 border-primary/20 bg-primary/5 shadow-lg overflow-hidden relative">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-primary/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
+                    <CardHeader className="pb-4">
+                        <div className="flex items-center gap-2">
+                            <div className="p-2 rounded-full bg-primary/20">
+                                <Phone className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                                <CardTitle className="text-lg font-bold">Want to skip typing?</CardTitle>
+                                <CardDescription>Get onboarded instantly with a 2-minute phone call.</CardDescription>
+                            </div>
+                        </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        <div className="flex gap-2">
+                            <Input
+                                placeholder="+1 (555) 000-0000"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                className="bg-background"
+                            />
+                            <Button
+                                onClick={handleCallMe}
+                                disabled={isCalling || !phoneNumber}
+                                className="min-w-[120px]"
+                            >
+                                {isCalling ? (
+                                    <span className="flex items-center gap-2">
+                                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                        Calling...
+                                    </span>
+                                ) : "Call Me Now"}
+                            </Button>
+                        </div>
+                        {callStatus === "success" && (
+                            <p className="text-sm text-green-600 font-medium flex items-center gap-2">
+                                <Check className="h-4 w-4" /> Calling you now! Pick up the phone.
+                            </p>
+                        )}
+                        {callStatus === "error" && (
+                            <p className="text-sm text-destructive font-medium">
+                                Something went wrong. Please check the number or try again.
+                            </p>
+                        )}
+                    </CardContent>
+                </Card>
 
                 <Card className="border-border/50 shadow-2xl rounded-3xl overflow-hidden">
                     <CardHeader className="bg-muted/30 pb-8 pt-8 px-8">

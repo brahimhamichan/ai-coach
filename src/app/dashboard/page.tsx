@@ -18,10 +18,17 @@ export default function Dashboard() {
   const user = useQuery(api.users.viewer);
   // Initialize user if needed (creates schedule etc)
   const initializeUser = useMutation(api.users.initializeUser);
+  const seedDemoData = useMutation(api.demo.seedDemoData);
 
   // Initialize user on load if logged in
   useEffect(() => {
     if (user) {
+      // Check if this is the demo user and seed data if needed
+      if (user.email === "demo@example.com") {
+        // We call this optimistically essentially
+        seedDemoData();
+      }
+
       // We can call this optimistically; it handles idempotency.
       // We pass timezone to ensure it's set.
       initializeUser({
@@ -30,10 +37,18 @@ export default function Dashboard() {
 
       // Redirect if not onboarded
       if (user.onboarded === false || user.onboarded === undefined) {
-        router.push("/onboarding");
+        // Since we seed demo data, we might not need to redirect demo user?
+        // Actually seedDemoData sets onboarded: true.
+        // But if it hasn't run yet, we might redirect.
+        // But initializing happens fast.
+        // Let's keep the redirect logic but maybe delay it?
+        // If seedDemoData runs, user.onboarded will update.
+        if (user.email !== "demo@example.com") {
+          router.push("/onboarding");
+        }
       }
     }
-  }, [user, initializeUser, router]);
+  }, [user, initializeUser, router, seedDemoData]);
 
   // Fetch dashboard data
   const vision = useQuery(api.visionProfiles.getVisionProfile);
@@ -65,6 +80,20 @@ export default function Dashboard() {
             </div>
           )}
         </header>
+
+        {/* Action Bar */}
+        <div className="mb-8 flex justify-end">
+          <button
+            onClick={() => router.push("/focus")}
+            className="group flex items-center gap-2 rounded-full border bg-background px-4 py-2 text-sm font-medium shadow-sm transition-all hover:border-primary hover:text-primary hover:shadow-md"
+          >
+            <span>Enter Focus Mode</span>
+            <div className="flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
+            </div>
+          </button>
+        </div>
 
         {/* Summary Banner - only shows if summaries exist */}
         <div className="mb-8">

@@ -180,5 +180,35 @@ export const addNextAction = mutation({
     },
 });
 
+// Toggle action completion status
+export const toggleActionCompletion = mutation({
+    args: {
+        id: v.id("dailyPlans"),
+        actionIndex: v.number(),
+        completed: v.boolean(),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) throw new Error("Not authenticated");
+
+        const plan = await ctx.db.get(args.id);
+        if (!plan) throw new Error("Plan not found");
+
+        if (plan.userId !== userId) throw new Error("Unauthorized");
+
+        const actions = [...plan.actions];
+        if (args.actionIndex < 0 || args.actionIndex >= actions.length) {
+            throw new Error("Invalid action index");
+        }
+
+        actions[args.actionIndex] = {
+            ...actions[args.actionIndex],
+            completed: args.completed,
+        };
+
+        await ctx.db.patch(args.id, { actions });
+    },
+});
+
 // Note: Daily plans are primarily created via Vapi webhook after evening call
 // Manual creation is available for user convenience
