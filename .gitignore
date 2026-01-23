@@ -50,3 +50,4 @@ playwright-report/
 # Local Agent State
 .gemini
 ralph.sh
+*.backup
